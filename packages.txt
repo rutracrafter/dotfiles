@@ -14,7 +14,6 @@ waybar
 otf-font-awesome
 ttf-font-awesome
 ttf-nerd-fonts-symbols
-hyprpaper
 rofi
 cliphist
 yazi
@@ -22,3 +21,6 @@ thunar
 wayland-utils
 brightnessctl
 tree
+matugen
+awww
+stow

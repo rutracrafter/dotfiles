@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
+mkdir -p "$(dirname "$STATE")"
+
+if [[ "${1:-}" == "--restore" ]]; then
+    [[ -f "$STATE" ]] || exit 0
+    WALL=$(<"$STATE")
+else
+    WALL=$(realpath "$1")
+    echo "$WALL" > "$STATE"
+fi
+
+until awww query &>/dev/null; do sleep 0.1; done
+
+awww img "$WALL" --transition-type grow
+wal -n -q --cols16 --saturate 0.8 -i "$WALL"
+
+hyprctl reload >/dev/null
+pkill -USR1 kitty || true
+pkill -USR2 waybar || true

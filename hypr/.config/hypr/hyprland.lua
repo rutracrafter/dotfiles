@@ -17,6 +17,12 @@
 -- Create your files separately and then require them like this:
 -- require("myColors")
 
+local colors_path = os.getenv("HOME") .. "/.cache/wal/hyprland-colors.lua"
+local ok, c = pcall(dofile, colors_path)
+if not ok then
+  -- fallback for a fresh machine before matugen has run
+  c = { primary = "rgb(6750a4)", tertiary = "rgb(7d5260)", outline = "rgb(49454f)" }
+end
 
 ------------------
 ---- MONITORS ----
@@ -59,7 +65,8 @@ local menu_command = "rofi -show drun"
 
 hl.on("hyprland.start", function ()
 	hl.exec_cmd("waybar")
-	hl.exec_cmd("hyprpaper")
+	hl.exec_cmd("awww-daemon")
+	hl.exec_cmd("setwall --restore")
 	hl.exec_cmd("systemctl --user start hyprpolkitagent")
 	hl.exec_cmd("wl-paste --type text --watch cliphist store")
 	hl.exec_cmd("wl-paste --type image --watch cliphist store")
@@ -109,8 +116,8 @@ hl.config({
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            active_border   = { colors = { c.primary, c.tertiary }, angle = 45 },
+            inactive_border = c.outline,
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps

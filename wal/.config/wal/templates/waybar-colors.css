@@ -1,0 +1,7 @@
+@define-color primary {color4};
+@define-color on_primary {background};
+@define-color surface {background};
+@define-color surface_container {color0};
+@define-color on_surface {foreground};
+@define-color outline {color8};
+@define-color error {color1};
