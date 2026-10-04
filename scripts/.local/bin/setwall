@@ -1,22 +1,61 @@
 #!/usr/bin/env bash
+# setwall <image>   set wallpaper, generate colors, reload apps
+# setwall --restore restore last wallpaper (used at Hyprland startup)
+# setwall --reload  re-render wal templates from cached colors and reload apps
+#                   (for iterating on templates; wallpaper untouched)
 set -euo pipefail
 
 STATE="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
-mkdir -p "$(dirname "$STATE")"
 
-if [[ "${1:-}" == "--restore" ]]; then
-    [[ -f "$STATE" ]] || exit 0
-    WALL=$(<"$STATE")
-else
-    WALL=$(realpath "$1")
-    echo "$WALL" > "$STATE"
-fi
+# Errors go to stderr, plus a notification when there's no terminal (e.g. exec at startup).
+err() {
+    echo "setwall: $*" >&2
+    [[ -t 2 ]] || notify-send -u critical "setwall" "$*" 2>/dev/null || true
+}
+trap 'err "failed at line $LINENO: $BASH_COMMAND"' ERR
 
-until awww query &>/dev/null; do sleep 0.1; done
+reload_apps() {
+    local out
+    out=$(hyprctl reload 2>&1) || true
+    [[ "$out" == "ok" ]] || err "hyprctl reload: $out"
+    out=$(hyprctl configerrors 2>&1)
+    [[ -z "${out//[[:space:]]/}" ]] || err "Hyprland config errors: $out"
+    pkill -USR1 kitty || true
+    pkill -USR2 waybar || true
+}
 
+wait_awww() {
+    # hyprland.start launches awww-daemon alongside us; give it a moment before starting our own
+    timeout 2 bash -c 'until awww query &>/dev/null; do sleep 0.1; done' && return
+    awww-daemon &>/dev/null & disown
+    timeout 5 bash -c 'until awww query &>/dev/null; do sleep 0.1; done' \
+        || { err "awww-daemon did not start"; exit 1; }
+}
+
+case "${1:-}" in
+    --reload)
+        wal -R -n -q -e -s
+        reload_apps
+        exit
+        ;;
+    --restore)
+        [[ -f "$STATE" ]] || exit 0
+        WALL=$(<"$STATE")
+        [[ -f "$WALL" ]] || { err "saved wallpaper not found: $WALL"; exit 1; }
+        ;;
+    "")
+        echo "usage: setwall <image> | --restore | --reload" >&2
+        exit 1
+        ;;
+    *)
+        [[ -f "$1" ]] || { err "wallpaper not found: $1"; exit 1; }
+        WALL=$(realpath "$1")
+        mkdir -p "$(dirname "$STATE")"
+        echo "$WALL" > "$STATE"
+        ;;
+esac
+
+wait_awww
 awww img "$WALL" --transition-type grow
-wal -n -q --cols16 --saturate 0.8 -i "$WALL"
-
-hyprctl reload >/dev/null
-pkill -USR1 kitty || true
-pkill -USR2 waybar || true
+wal -n -q -e -s --cols16 --saturate 0.8 -i "$WALL"
+reload_apps

@@ -24,3 +24,5 @@ tree
 matugen
 awww
 stow
+less
+mousepad

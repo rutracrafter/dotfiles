@@ -20,7 +20,7 @@
 local colors_path = os.getenv("HOME") .. "/.cache/wal/hyprland-colors.lua"
 local ok, c = pcall(dofile, colors_path)
 if not ok then
-  -- fallback for a fresh machine before matugen has run
+  -- fallback for a fresh machine before wal has run
   c = { primary = "rgb(6750a4)", tertiary = "rgb(7d5260)", outline = "rgb(49454f)" }
 end
 
@@ -66,10 +66,10 @@ local menu_command = "rofi -show drun"
 hl.on("hyprland.start", function ()
 	hl.exec_cmd("waybar")
 	hl.exec_cmd("awww-daemon")
-	hl.exec_cmd("setwall --restore")
 	hl.exec_cmd("systemctl --user start hyprpolkitagent")
 	hl.exec_cmd("wl-paste --type text --watch cliphist store")
 	hl.exec_cmd("wl-paste --type image --watch cliphist store")
+	hl.exec_cmd("setwall --restore")
 
 end)
 
@@ -110,8 +110,8 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
     general = {
-        gaps_in  = 5,
-        gaps_out = 8,
+        gaps_in  = 2,
+        gaps_out = 4,
 
         border_size = 2,
 
@@ -202,6 +202,11 @@ hl.animation({ leaf = "zoomFactor",    enabled = true,  speed = 7,    bezier = "
 --     border_size = 0,
 --     rounding    = 0,
 -- })
+
+-- Persist workspaces 1-5 even when nothing open
+for i = 1, 5 do
+    hl.workspace_rule({ workspace = i, persistent = true })
+end
 
 -- See https://wiki.hypr.land/Configuring/Layouts/Dwindle-Layout/ for more
 hl.config({
