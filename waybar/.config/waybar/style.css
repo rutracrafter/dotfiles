@@ -5,9 +5,13 @@
    (active workspace, clock), secondary marks "on"/charging, error marks problems. */
 
 * {
-    /* `otf-font-awesome` is required to be installed for icons */
-    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    /* One font per job so every icon shares the same size and baseline:
+       text in Noto Sans, U+F000 icons from Font Awesome 7 Solid (otf-font-awesome),
+       everything else (workspace circles, backlight) from Symbols Nerd Font. */
+    font-family: "Noto Sans", "Font Awesome 7 Free Solid", "Symbols Nerd Font";
     font-size: 13px;
+    /* tabular digits: modules don't shift sideways as numbers change */
+    font-feature-settings: "tnum";
     min-height: 0;
 }
 
@@ -49,13 +53,19 @@ button:hover {
 
 /* ---- left ---- */
 
+/* Spacing system: 12px between modules (5px padding each side + "spacing": 2 in
+   config.jsonc), one text space between a value and its icon, and both ends of the
+   bar inset ~10px (the active workspace pill keeps an even 3px all round). */
+
 #workspaces {
-    margin: 4px 4px 4px 6px;
+    margin: 3px 0 3px 3px;
 }
 
+/* the circle glyphs carry ~4.5px of side bearing each, so a small padding already
+   lands them at the same ~13px rhythm as the other modules */
 #workspaces button {
-    padding: 0 8px;
-    margin: 0 1px;
+    padding: 0 2px;
+    margin: 0;
     border-radius: 8px;
     background-color: transparent;
     color: @on_surface_variant;
@@ -82,8 +92,8 @@ button:hover {
 }
 
 #submap {
-    margin: 4px 0;
-    padding: 0 10px;
+    margin: 3px 0;
+    padding: 0 8px;
     border-radius: 8px;
     background-color: @secondary;
     color: @on_secondary;
@@ -125,13 +135,13 @@ window#waybar.empty #window {
 #language,
 #keyboard-state,
 #mpd {
-    padding: 0 8px;
+    padding: 0 5px;
     color: @on_surface;
     background-color: transparent;
 }
 
 #keyboard-state > label {
-    padding: 0 4px;
+    padding: 0 2px;
 }
 
 #keyboard-state > label.locked {

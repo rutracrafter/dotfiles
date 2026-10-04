@@ -26,3 +26,4 @@ awww
 stow
 less
 mousepad
+grim
