@@ -1,0 +1,45 @@
+/* Colors come from wal, same file Waybar uses */
+  @import url("file:///home/lain/.cache/wal/waybar-colors.css");
+
+  window {
+      background-color: alpha(@surface, 0.6);
+  }
+
+  button {
+      color: @on_surface;
+      background-color: alpha(@surface_container, 0.9);
+      border: 1px solid @outline;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: none;
+  }
+
+  button:hover {
+      color: @primary;
+      background-color: @surface_bright;
+      border-color: @primary;
+  }
+  
+  button:active {
+      color: @on_primary;
+      background-color: @primary;
+  }
+  
+  button#shutdown:focus,
+  button#shutdown:hover {
+      color: @error;
+      border-color: @error;
+  }
+  
+  button label.action-name {
+      font-size: 15px;
+  }   
+  
+  button label.keybind {
+      padding: 0 6px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: monospace;
+      color: @on_surface_variant;
+      background-color: @surface;
+  }

@@ -5,6 +5,7 @@ hyprland
 kitty
 xdg-desktop-portal
 xdg-desktop-portal-gtk
+xdg-desktop-portal-hyprland
 mako
 hyprpolkitagent
 qt5-wayland
@@ -27,3 +28,11 @@ stow
 less
 mousepad
 grim
+slurp
+swappy
+pipewire
+wireplumber
+hyprsunset
+hyprlock
+hyprshutdown
+reflector

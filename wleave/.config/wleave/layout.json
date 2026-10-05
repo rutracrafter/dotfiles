@@ -1,0 +1,51 @@
+{
+      "buttons-per-row": "1/1",
+      "column-spacing": "12px",
+      "margin": "35%",
+      "margin-left": "20%",
+      "margin-right": "20%",
+      "button-aspect-ratio": "1",
+      "close-on-lost-focus": true,
+      "show-keybinds": true,
+      "no-version-info": true,
+      "button-defaults": {
+          "keybind-label": "%S"
+      },
+      "buttons": [
+          {
+              "label": "lock",
+              "action": "hyprlock",
+              "text": "Lock",
+              "keybind": "l",
+              "icon": "/usr/share/wleave/icons/lock.svg"
+          },
+          {
+              "label": "logout",
+              "action": "hyprshutdown -t 'Logging out...'",
+              "text": "Logout",
+              "keybind": "e",
+              "icon": "/usr/share/wleave/icons/logout.svg"
+          },
+          {
+              "label": "suspend",
+              "action": "systemctl suspend",
+              "text": "Suspend",
+              "keybind": "u",
+              "icon": "/usr/share/wleave/icons/suspend.svg"
+          },
+          {
+              "label": "reboot",
+              "action": "hyprshutdown -t 'Restarting...' -p 'systemctl reboot'",
+              "text": "Reboot",
+              "keybind": "r",
+              "icon": "/usr/share/wleave/icons/reboot.svg"
+          },
+          {
+              "label": "shutdown",
+              "action": "hyprshutdown -t 'Shutting down...' -p 'systemctl poweroff'",
+              "text": "Shutdown",
+              "keybind": "s",
+              "icon": "/usr/share/wleave/icons/shutdown.svg"
+          }
+      ]
+  }

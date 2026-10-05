@@ -1,1 +1,2 @@
 python-pywal16
+wleave-git
