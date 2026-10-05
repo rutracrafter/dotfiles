@@ -35,4 +35,7 @@ wireplumber
 hyprsunset
 hyprlock
 hyprshutdown
+hypridle
 reflector
+zsh
+zsh-completions
