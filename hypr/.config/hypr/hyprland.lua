@@ -30,12 +30,18 @@ end
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 hl.monitor({
-    output   = "",
-    mode     = "preferred",
-    position = "auto",
-    scale    = "auto",
+    output   = "eDP-1",
+    mode     = "1920x1080@60",
+    position = "320x1440",
+    scale    = "1",
 })
 
+hl.monitor({
+    output   = "HDMI-A-1",
+    mode     = "3840x2160@144",
+    position = "0x0",
+    scale    = "1.5",
+})
 
 ---------------------
 ---- MY PROGRAMS ----
@@ -210,6 +216,8 @@ for i = 1, 5 do
     hl.workspace_rule({ workspace = i, persistent = true })
 end
 
+
+
 -- See https://wiki.hypr.land/Configuring/Layouts/Dwindle-Layout/ for more
 hl.config({
     dwindle = {
@@ -314,11 +322,66 @@ hl.bind(mainMod .. " + j", hl.dsp.focus({ direction = "down" }))
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
-for i = 1, 10 do
-    local key = i % 10 -- 10 maps to key 0
-    hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ workspace = i}))
-    hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
+-- for i = 1, 10 do
+--     local key = i % 10 -- 10 maps to key 0
+--     hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ workspace = i}))
+--     hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
+-- end
+
+-- Define our 10 standard workspaces
+-- local total_workspaces = 10
+-- for i = 1, total_workspaces do
+--     local key = i % 10   -- Maps 10 to 0 key
+-- 
+--     -- Focus workspace 1-5 on the CURRENT monitor
+--     hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = "r~" .. i }))
+-- 
+--     -- Move focused window to workspace 1-5 on the CURRENT monitor
+--     hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = "r~" .. i }))
+-- end
+
+
+local workspaces_per_monitor = 10
+local persistent_per_monitor = 5
+
+-- Each monitor gets its own block of workspace IDs
+local monitor_offsets = {
+    ["eDP-1"]    = 0,   -- workspaces 1-10
+    ["HDMI-A-1"] = 10,  -- workspaces 11-20
+}
+
+-- Bind workspaces to monitors; first 5 persistent, first one is the default
+for name, offset in pairs(monitor_offsets) do
+    for i = 1, workspaces_per_monitor do
+        local rule = {
+            workspace = tostring(offset + i),
+            monitor   = name,
+        }
+        if i <= persistent_per_monitor then rule.persistent = true end
+        if i == 1 then rule.default = true end
+        hl.workspace_rule(rule)
+    end
 end
+
+-- Turn "slot N" into the real workspace ID for the focused monitor
+local function target(slot)
+    local mon = hl.get_active_monitor()
+    local offset = (mon and monitor_offsets[mon.name]) or 0
+    return tostring(offset + slot)
+end
+
+for i = 1, workspaces_per_monitor do
+    local key = tostring(i % 10)   -- 10 -> key 0
+
+    hl.bind(mainMod .. " + " .. key, function()
+        hl.dispatch(hl.dsp.focus({ workspace = target(i) }))
+    end)
+
+    hl.bind(mainMod .. " + SHIFT + " .. key, function()
+        hl.dispatch(hl.dsp.window.move({ workspace = target(i) }))
+    end)
+end
+
 
 -- Example special workspace (scratchpad)
 hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))

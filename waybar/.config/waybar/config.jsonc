@@ -37,24 +37,48 @@
         "custom/power"
     ],
     // Modules configuration
+    // "hyprland/workspaces": {
+    //     "format": "{icon}",
+    //     "format-icons": {
+    //         "1": "",
+    //         "2": "",
+    //         "3": "",
+    //         "4": "",
+    //         "5": "",
+    //         "active": ""
+    //     },
+    //     // show special workspaces (e.g. the SUPER+S scratchpad) when they're open
+    //     "show-special": true,
+    //     "special-visible-only": true,
+    //     // Waybar 0.15 sends old-style dispatch commands, which Hyprland's Lua config rejects,
+    //     // so clicking a workspace button does nothing (Alexays/Waybar#5008). Scrolling uses
+    //     // Lua dispatch directly instead.
+    //     "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
+    //     "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'"
+    // },
     "hyprland/workspaces": {
         "format": "{icon}",
-	"format-icons": {
-	    "1": "",
-	    "2": "",
-	    "3": "",
-	    "4": "",
-	    "5": "",
-	    "active": ""
-	},
+        // each bar only shows its own monitor's workspaces (this is the default, but explicit is clearer)
+        "all-outputs": false,
+        "format-icons": {
+            // laptop slots       // external monitor uses the same icons
+            "1": "",              "11": "",
+            "2": "",              "12": "",
+            "3": "",              "13": "",
+            "4": "",              "14": "",
+            "5": "",              "15": "",
+            "active": "",
+            // slots 6-10 / 16-20 when something is open on them
+            "default": ""
+        },
         // show special workspaces (e.g. the SUPER+S scratchpad) when they're open
         "show-special": true,
         "special-visible-only": true,
         // Waybar 0.15 sends old-style dispatch commands, which Hyprland's Lua config rejects,
         // so clicking a workspace button does nothing (Alexays/Waybar#5008). Scrolling uses
         // Lua dispatch directly instead.
-        "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
-        "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'"
+        "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"m-1\" })'",
+        "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"m+1\" })'"
     },
     "hyprland/window": {
         "max-length": 60,
